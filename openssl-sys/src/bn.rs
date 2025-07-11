@@ -1,8 +1,9 @@
 use libc::*;
 
-#[cfg(target_pointer_width = "64")]
+// Even wasm-32 has an I64 type, which openssl uses for BN_ULONG.
+#[cfg(any(target_pointer_width = "64", target_family = "wasm"))]
 pub type BN_ULONG = c_ulonglong;
-#[cfg(target_pointer_width = "32")]
+#[cfg(all(target_pointer_width = "32", not(target_family = "wasm")))]
 pub type BN_ULONG = c_uint;
 
 #[cfg(ossl110)]
